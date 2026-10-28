@@ -29,11 +29,19 @@ public class AbstractDao {
         } catch (ClassNotFoundException e) {
         }
 
+        String url = "jdbc:mysql://" + env("DB_HOST", "localhost") + ":" + env("DB_PORT", "3306")
+                + "/" + env("DB_NAME", "livrai");
+
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/livrai", "root", "password");
+            connection = DriverManager.getConnection(url, env("DB_USER", "root"), env("DB_PASSWORD", "password"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String env(String name, String defaultValue) {
+        String value = System.getenv(name);
+        return value == null || value.isEmpty() ? defaultValue : value;
     }
 
     protected interface SqlQuery<T> {
